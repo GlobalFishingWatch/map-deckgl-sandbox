@@ -63,7 +63,8 @@ export default class ScatterplotLayer extends Layer {
     this.state.attributeManager.addInstanced({
       instancePositions: {size: 3, accessor: 'getPosition', update: this.calculateInstancePositions},
       instanceRadius: {size: 1, accessor: 'getRadius', defaultValue: 1, update: this.calculateInstanceRadius},
-      instanceColors: {size: 4, type: GL.UNSIGNED_BYTE, accessor: 'getColor', update: this.calculateInstanceColors}
+      instanceColors: {size: 4, type: GL.UNSIGNED_BYTE, accessor: 'getColor', update: this.calculateInstanceColors},
+      instanceTime: {size: 1, update: this.calculateInstanceTime}
     });
     /* eslint-enable max-len */
   }
@@ -100,13 +101,15 @@ export default class ScatterplotLayer extends Layer {
   }
 
   draw({uniforms}) {
-    const {radiusScale, radiusMinPixels, radiusMaxPixels, outline, strokeWidth} = this.props;
+    const {radiusScale, radiusMinPixels, radiusMaxPixels, outline, strokeWidth, innerTimeStart, innerTimeEnd} = this.props;
     this.state.model.render(Object.assign({}, uniforms, {
       outline: outline ? 1 : 0,
       strokeWidth,
       radiusScale,
       radiusMinPixels,
-      radiusMaxPixels
+      radiusMaxPixels,
+      innerTimeStart,
+      innerTimeEnd
     }));
   }
 
@@ -155,6 +158,16 @@ export default class ScatterplotLayer extends Layer {
     for (const point of data) {
       const radius = getRadius(point);
       value[i++] = isNaN(radius) ? 1 : radius;
+    }
+  }
+
+  calculateInstanceTime(attribute) {
+    const {data} = this.props;
+    const {value} = attribute;
+    let i = 0;
+    for (const point of data) {
+      const time = point.time;
+      value[i++] = time;
     }
   }
 

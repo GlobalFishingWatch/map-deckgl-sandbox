@@ -25,6 +25,7 @@ attribute vec3 positions;
 
 attribute vec3 instancePositions;
 attribute float instanceRadius;
+attribute float instanceTime;
 attribute vec4 instanceColors;
 attribute vec3 instancePickingColors;
 
@@ -35,12 +36,20 @@ uniform float radiusMaxPixels;
 uniform float renderPickingBuffer;
 uniform float outline;
 uniform float strokeWidth;
+uniform float innerTimeStart;
+uniform float innerTimeEnd;
 
 varying vec4 vColor;
 varying vec2 unitPosition;
 varying float innerUnitRadius;
 
 void main(void) {
+    
+  if (instanceTime < innerTimeStart || instanceTime > innerTimeEnd) {
+    gl_Position = vec4(0., 0., 0., 0.);
+    return;
+  }
+
   // Multiply out radius and clamp to limits
   float outerRadiusPixels = clamp(
     project_scale(radiusScale * instanceRadius),
@@ -54,6 +63,7 @@ void main(void) {
   unitPosition = positions.xy;
   // 0 - solid circle, 1 - stroke with lineWidth=0
   innerUnitRadius = outline * (1.0 - strokeWidth / outerRadiusPixels);
+
 
   // Find the center of the point and add the current vertex
   vec3 center = project_position(instancePositions);

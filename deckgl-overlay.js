@@ -8,7 +8,7 @@ export default class DeckGLOverlay extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      r: 400
+      r: 0
     };
     this._tick = this._tick.bind(this);
   }
@@ -18,13 +18,11 @@ export default class DeckGLOverlay extends Component {
   }
 
   _animate() {
-    // this._stopAnimate();
-
-    //this.intervalTimer = window.setInterval(this._tick, 20);
+    this.intervalTimer = window.setInterval(this._tick, 20);
   }
 
   _tick() {
-    this.setState({r : this.state.r + 10});
+    this.setState({r : this.state.r + 1000});
   }
 
   render() {
@@ -44,7 +42,9 @@ export default class DeckGLOverlay extends Component {
             data,
             radiusScale: 400,
             outline: false,
-            opacity: .5
+            opacity: .5,
+            innerTimeStart: r,
+            innerTimeEnd: r + 1000000
           })
         ]} />
     );

@@ -9,14 +9,15 @@ class Root extends Component {
   constructor(props) {
     super(props);
 
-    const data = Array(1000000).fill(null).map(() => {
+    const data = Array(3000000).fill(null).map((e, i) => {
       return {
         radius: 5,
         color: [255, 0, 0],
         position: [
           -45 + Math.random() * 90,
           -45 + Math.random() * 90,
-        ]
+        ],
+        time: i
       };
     });
 
