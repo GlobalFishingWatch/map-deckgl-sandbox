@@ -38,7 +38,7 @@ const defaultProps = {
   outline: false,
   fp64: false,
 
-  getPosition: x => x.position,
+  getPosition: x => [x.longitude, x.latitude],
   getRadius: x => x.radius || 1,
   getColor: x => x.color || DEFAULT_COLOR
 };
@@ -67,6 +67,16 @@ export default class ScatterplotLayer extends Layer {
       instanceTime: {size: 1, update: this.calculateInstanceTime}
     });
     /* eslint-enable max-len */
+  }
+
+  shouldUpdateState({props, oldProps, context, oldContext, changeFlags}) {
+    const s = super.shouldUpdateState({props, oldProps, context, oldContext, changeFlags});
+    console.log(changeFlags.dataChanged);
+
+    if (changeFlags.viewportChanged === true || changeFlags.propsChanged === true) {
+      return true;
+    }
+    return false;
   }
 
   updateAttribute({props, oldProps, changeFlags}) {
@@ -166,7 +176,7 @@ export default class ScatterplotLayer extends Layer {
     const {value} = attribute;
     let i = 0;
     for (const point of data) {
-      const time = point.time;
+      const time = point.timeIndex;
       value[i++] = time;
     }
   }

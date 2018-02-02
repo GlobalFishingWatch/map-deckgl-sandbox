@@ -1,14 +1,14 @@
 import { connect } from 'react-redux';
 import App from './app';
-import { getTiles } from './actions';
+import { updateTiles } from './actions';
 
 const mapStateToProps = state => ({
-  z: state.app.z,
+  points: state.app.points,
 });
 
 const mapDispatchToProps = dispatch => ({
   viewportChange: (bounds, zoom) => {
-    dispatch(getTiles(bounds, zoom));
+    dispatch(updateTiles(bounds, zoom));
   }
 });
 
