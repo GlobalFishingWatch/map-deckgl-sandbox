@@ -18,7 +18,7 @@ export default class DeckGLOverlay extends Component {
   }
 
   _animate() {
-    this.intervalTimer = window.setInterval(this._tick, 20);
+    //this.intervalTimer = window.setInterval(this._tick, 20);
   }
 
   _tick() {
@@ -28,7 +28,6 @@ export default class DeckGLOverlay extends Component {
   render() {
     const {viewport, data} = this.props;
     const {r} = this.state;
-    console.log(r)
     return (
       <DeckGL
         {...viewport}
@@ -44,7 +43,7 @@ export default class DeckGLOverlay extends Component {
             outline: false,
             opacity: .5,
             innerTimeStart: r,
-            innerTimeEnd: r + 1000000
+            innerTimeEnd: r + 1000
           })
         ]} />
     );
