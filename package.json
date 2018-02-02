@@ -9,7 +9,10 @@
     "luma.gl": "^4.0.1",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
-    "react-map-gl": "^3.0.0"
+    "react-map-gl": "^3.0.0",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",

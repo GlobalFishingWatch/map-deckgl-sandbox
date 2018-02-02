@@ -1,12 +1,11 @@
 /* global document */
 import React, {Component} from 'react';
-import {render} from 'react-dom';
 import MapGL from 'react-map-gl';
 import DeckGLOverlay from './deckgl-overlay';
 import tilecover from '@mapbox/tile-cover';
 import MAPBOX_TOKEN from './mapbox-token';
 
-class Root extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
 
@@ -54,6 +53,7 @@ class Root extends Component {
     if (this._map) {
       const zoom = this._map.getZoom()
       const bounds = this._map.getBounds()
+      this.props.viewportChange(zoom, bounds)
       //  [w, s, e, n]
       const [w, s, e, n] = [bounds.getWest(), bounds.getSouth(), e, bounds.getNorth()];
       // console.log(tile);
@@ -71,6 +71,7 @@ class Root extends Component {
       };
 
       console.log(tilecover.tiles(geom, limits))
+      console.log(tilecover.indexes(geom, limits))
     }
     this.setState({
       viewport: {...this.state.viewport, ...viewport}
@@ -78,6 +79,7 @@ class Root extends Component {
   }
 
   render() {
+    console.log(this.props.z)
     const {viewport, data} = this.state;
     // const l = -15 + Math.random() * 30;
     // const filteredData = data.filter(d => d.position[0] > l);
@@ -93,5 +95,4 @@ class Root extends Component {
   }
 }
 
-render(<Root />, document.body.appendChild(document.createElement('div')));
-
+export default App;
