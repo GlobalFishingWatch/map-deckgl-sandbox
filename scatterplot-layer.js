@@ -18,15 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import {Layer} from '../../../lib';
-import {COORDINATE_SYSTEM} from '../../../lib';
-import {get} from '../../../lib/utils';
-import {fp64ify, enable64bitSupport} from '../../../lib/utils/fp64';
+import {Layer, COORDINATE_SYSTEM, experimental} from 'deck.gl';
+import {fp64ify, enable64bitSupport} from 'deck.gl/src/lib/utils/fp64';
 import {GL, Model, Geometry} from 'luma.gl';
 
 import vs from './scatterplot-layer-vertex.glsl';
 import vs64 from './scatterplot-layer-vertex-64.glsl';
 import fs from './scatterplot-layer-fragment.glsl';
+
+const get = experimental.get;
 
 const DEFAULT_COLOR = [0, 0, 0, 255];
 

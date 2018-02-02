@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
-import DeckGL, {LineLayer, ScatterplotLayer} from 'deck.gl';
+// import DeckGL, {LineLayer, ScatterplotLayer} from 'deck.gl';
+import DeckGL, {LineLayer} from 'deck.gl';
+import ScatterplotLayer from './scatterplot-layer';
 
 export default class DeckGLOverlay extends Component {
 
@@ -18,7 +20,7 @@ export default class DeckGLOverlay extends Component {
   _animate() {
     // this._stopAnimate();
 
-    this.intervalTimer = window.setInterval(this._tick, 20);
+    //this.intervalTimer = window.setInterval(this._tick, 20);
   }
 
   _tick() {
