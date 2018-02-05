@@ -237,27 +237,36 @@ export const addTracksPointsRenderingData = (data) => {
  * @param vectorArray the source data before indexing by day
  */
 export const getTracksPlaybackData = (vectorArray) => {
-  const playbackData = [];
+  const playbackData = {
+    path: [],
+    timeIndex: [],
+    color: [Math.random()* 255, Math.random()* 255, Math.random()* 255],
+    width: 1
+  };
 
   for (let index = 0, length = vectorArray.series.length; index < length; index++) {
     const datetime = vectorArray.datetime[index];
     const timeIndex = convert.getOffsetedTimeAtPrecision(datetime);
 
-    if (!playbackData[timeIndex]) {
-      const frame = {
-        worldX: [vectorArray.worldX[index]],
-        worldY: [vectorArray.worldY[index]],
-        series: [vectorArray.series[index]],
-        hasFishing: [vectorArray.hasFishing[index]]
-      };
-      playbackData[timeIndex] = frame;
-      continue;
-    }
-    const frame = playbackData[timeIndex];
-    frame.worldX.push(vectorArray.worldX[index]);
-    frame.worldY.push(vectorArray.worldY[index]);
-    frame.series.push(vectorArray.series[index]);
-    frame.hasFishing.push(vectorArray.hasFishing[index]);
+    playbackData.path.push([vectorArray.longitude[index], vectorArray.latitude[index]]);
+    playbackData.timeIndex.push(timeIndex);
+
+
+    // if (!playbackData[timeIndex]) {
+    //   const frame = {
+    //     worldX: [vectorArray.worldX[index]],
+    //     worldY: [vectorArray.worldY[index]],
+    //     series: [vectorArray.series[index]],
+    //     hasFishing: [vectorArray.hasFishing[index]]
+    //   };
+    //   playbackData[timeIndex] = frame;
+    //   continue;
+    // }
+    // const frame = playbackData[timeIndex];
+    // frame.worldX.push(vectorArray.worldX[index]);
+    // frame.worldY.push(vectorArray.worldY[index]);
+    // frame.series.push(vectorArray.series[index]);
+    // frame.hasFishing.push(vectorArray.hasFishing[index]);
   }
   return playbackData;
 };

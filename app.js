@@ -13,7 +13,7 @@ class App extends Component {
         height: 800,
         latitude: 0,
         longitude: 0,
-        zoom: 5.01,
+        zoom: 4.01,
         bearing: 0,
         pitch: 0
       }
@@ -23,6 +23,7 @@ class App extends Component {
 
   componentDidMount() {
     window.addEventListener('resize', this._resize.bind(this));
+    this.props.loadTracks();
     this._resize();
   }
 
@@ -49,19 +50,21 @@ class App extends Component {
   render() {
 
     const {viewport} = this.state;
-    const {points} = this.props;
+    const {points, tracks} = this.props;
+    // console.log(tracks)
 
     return (
       <div>
         <div className="debug">
-          {points.length} points
+          {points.length} points / {tracks.reduce((accumulator, current) => accumulator + current.path.length, 0)} track points
         </div>
         <MapGL
           ref={(ref) => { this._ref = ref; } }
+          mapStyle={'mapbox://styles/nerik/cjd68dvuj56s92snto98hj4ry'}
           {...viewport}
           onViewportChange={this._onViewportChange.bind(this)}
           mapboxApiAccessToken={MAPBOX_TOKEN}>
-          <DeckGLOverlay viewport={viewport} data={points || []} />
+          <DeckGLOverlay viewport={viewport} points={points} tracks={tracks} />
         </MapGL>
       </div>
     );

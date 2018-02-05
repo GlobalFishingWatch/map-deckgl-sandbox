@@ -4,7 +4,7 @@ import {
   getCleanVectorArrays,
   groupData,
   getTilePlaybackData,
-  selectVesselsAt
+  getTracksPlaybackData
 } from './heatmapTileData';
 
 function _loadLayerTile(tileCoordinates, token, temporalExtentsIndices, { urls, temporalExtents, temporalExtentsLess, isPBF }) {
@@ -50,12 +50,12 @@ function _parseLayerTile(rawTileData, colsByName, isPBF, tileCoordinates, map, p
   return playbackData;
 }
 
-
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNmOmh0dHBzOi8vdGVzdC5zYWxlc2ZvcmNlLmNvbS9pZC8wMEQ2MzAwMDAwMDh3YldFQVEvMDA1NjMwMDAwMDE3OEZoQUFJIiwidmVyc2lvbiI6MiwiaWF0IjoxNTE1NTgyNTcwfQ.Mo4TH0xXD0krVQByrkczwNNIO3kbxo-SLDPs4P1wPgk';
+const temporalExtents = [[1325376000000, 1356998400000]];
 
 function _loadTiles(updatedTiles) {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     const allPromises = [];
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InNmOmh0dHBzOi8vdGVzdC5zYWxlc2ZvcmNlLmNvbS9pZC8wMEQ2MzAwMDAwMDh3YldFQVEvMDA1NjMwMDAwMDE3OEZoQUFJIiwidmVyc2lvbiI6MiwiaWF0IjoxNTE1NTgyNTcwfQ.Mo4TH0xXD0krVQByrkczwNNIO3kbxo-SLDPs4P1wPgk';
     updatedTiles.forEach((updatedTile) => {
       const coords = {
         x: updatedTile.coords[0],
@@ -67,7 +67,7 @@ function _loadTiles(updatedTiles) {
         token,
         [0],
         {
-          temporalExtents: [[1325376000000, 1356998400000]],
+          temporalExtents,
           urls: {
             'default': [['https://api-dot-world-fishing-827.appspot.com/v2/tilesets/516-resample-v2']]
           }
@@ -105,7 +105,42 @@ function _loadTiles(updatedTiles) {
       console.log('all tiles loaded');
     });
   };
-};
+}
+
+function _loadTracks(seriesgroup) {
+  return (dispatch) => {
+    let allPromises = getTilePromises(
+      'https://api-dot-world-fishing-827.appspot.com/v2/tilesets/516-resample-v2',
+      token,
+      temporalExtents, {
+        seriesgroup
+      });
+
+    Promise.all(allPromises.map(p => p.catch(e => e)))
+      .then((rawTileData) => {
+        const cleanData = getCleanVectorArrays(rawTileData);
+
+        if (!cleanData.length) {
+          return;
+        }
+        const groupedData = groupData(cleanData, [
+          'latitude',
+          'longitude',
+          'datetime',
+          'series',
+          'weight',
+          'sigma'
+        ]);
+
+        // const vectorArray = addTracksPointsRenderingData(groupedData);
+
+        dispatch({
+          type: 'update_tracks',
+          payload: getTracksPlaybackData(groupedData)
+        });
+      });
+  };
+}
 
 export function updateTiles(bounds, zoom) {
   return (dispatch, getState) => {
@@ -137,8 +172,17 @@ export function updateTiles(bounds, zoom) {
     });
 
 
-
-
     dispatch(_loadTiles(updatedTiles));
   };
+}
+
+
+
+export function loadTracks() {
+  return (dispatch) => {
+    dispatch(_loadTracks(6531094));
+    dispatch(_loadTracks(958751));
+  };
+  // https://api-dot-skytruth-pelagos-production.appspot.com/v2/tilesets/516-resample-v2/sub/seriesgroup=6531094/2012-01-01T00:00:00.000Z,2013-01-01T00:00:00.000Z;0,0,0
+  // https://api-dot-skytruth-pelagos-production.appspot.com/v2/tilesets/516-resample-v2/sub/seriesgroup=958751/2012-01-01T00:00:00.000Z,2013-01-01T00:00:00.000Z;0,0,0
 }

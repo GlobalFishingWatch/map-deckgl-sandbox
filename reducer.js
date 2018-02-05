@@ -1,7 +1,8 @@
 const initialState = {
   tilesIndexes: [],
   tiles: [],
-  points: []
+  points: [],
+  tracks: []
 };
 
 export default function (state = initialState, action) {
@@ -18,6 +19,9 @@ export default function (state = initialState, action) {
       points = points.concat(tile.data);
     });
     return Object.assign({}, state, { tiles: newTiles, points });
+  }
+  case 'update_tracks': {
+    return Object.assign({}, state, { tracks: state.tracks.concat(action.payload) });
   }
   default:
     return state;

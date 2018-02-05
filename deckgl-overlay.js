@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 // import DeckGL, {LineLayer, ScatterplotLayer} from 'deck.gl';
-import DeckGL /*, {LineLayer}*/ from 'deck.gl';
+import DeckGL, {PathLayer} from 'deck.gl';
 import ScatterplotLayer from './scatterplot-layer';
 
 export default class DeckGLOverlay extends Component {
@@ -33,24 +33,28 @@ export default class DeckGLOverlay extends Component {
   }
 
   render() {
-    const {viewport, data} = this.props;
+    const {viewport, points, tracks} = this.props;
     const {t} = this.state;
+
     return (
       <DeckGL
         {...viewport}
         debug
         layers={[
-          // new LineLayer({
-          //   data: [{sourcePosition: [-122.41669, 37.7853], targetPosition: [-122.41669, 37.781]}]
-          // }),
           new ScatterplotLayer({
             id: 'scatterplot-layer',
-            data,
+            data: points,
             radiusScale: 400,
             outline: false,
             opacity: .5,
             innerTimeStart: t,
             innerTimeEnd: t + 300
+          }),
+          new PathLayer({
+            id: 'path-layer',
+            data: tracks,
+            rounded: false,
+            widthScale: 100000 / (viewport.zoom * viewport.zoom)
           })
         ]} />
     );

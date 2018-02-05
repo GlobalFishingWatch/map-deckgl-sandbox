@@ -32,7 +32,8 @@ module.exports = {
             "error",
             "always"
         ],
-        "react/jsx-uses-vars": 2
+        "react/jsx-uses-vars": 2,
+        "no-console": 0
 
     }
 };
