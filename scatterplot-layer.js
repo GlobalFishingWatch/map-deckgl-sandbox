@@ -69,15 +69,15 @@ export default class ScatterplotLayer extends Layer {
     /* eslint-enable max-len */
   }
 
-  shouldUpdateState({props, oldProps, context, oldContext, changeFlags}) {
-    const s = super.shouldUpdateState({props, oldProps, context, oldContext, changeFlags});
-    console.log(changeFlags.dataChanged);
-
-    if (changeFlags.viewportChanged === true || changeFlags.propsChanged === true) {
-      return true;
-    }
-    return false;
-  }
+  // shouldUpdateState({props, oldProps, context, oldContext, changeFlags}) {
+  //   const s = super.shouldUpdateState({props, oldProps, context, oldContext, changeFlags});
+  //   console.log(changeFlags.dataChanged);
+  //
+  //   if (changeFlags.viewportChanged === true || changeFlags.propsChanged === true) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   updateAttribute({props, oldProps, changeFlags}) {
     if (props.fp64 !== oldProps.fp64) {
@@ -142,6 +142,7 @@ export default class ScatterplotLayer extends Layer {
     const {data, getPosition} = this.props;
     const {value} = attribute;
     let i = 0;
+    console.log(data.length)
     for (const point of data) {
       const position = getPosition(point);
       value[i++] = get(position, 0);

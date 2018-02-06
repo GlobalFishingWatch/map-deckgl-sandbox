@@ -237,19 +237,31 @@ export const addTracksPointsRenderingData = (data) => {
  * @param vectorArray the source data before indexing by day
  */
 export const getTracksPlaybackData = (vectorArray) => {
-  const playbackData = {
-    path: [],
-    timeIndex: [],
-    color: [Math.random()* 255, Math.random()* 255, Math.random()* 255],
-    width: 1
-  };
+  // const playbackData = {
+  //   path: [],
+  //   timeIndex: [],
+  //   color: [Math.random()* 255, Math.random()* 255, Math.random()* 255],
+  //   width: 1
+  // };
+  const playbackData = [];
+  let prevPos;
 
   for (let index = 0, length = vectorArray.series.length; index < length; index++) {
     const datetime = vectorArray.datetime[index];
     const timeIndex = convert.getOffsetedTimeAtPrecision(datetime);
 
-    playbackData.path.push([vectorArray.longitude[index], vectorArray.latitude[index]]);
-    playbackData.timeIndex.push(timeIndex);
+    // playbackData.path.push([vectorArray.longitude[index], vectorArray.latitude[index]]);
+    // playbackData.timeIndex.push(timeIndex);
+
+    const currentPos = [vectorArray.longitude[index], vectorArray.latitude[index]];
+    if (index > 0) {
+      playbackData.push({
+        sourcePosition: prevPos,
+        targetPosition: currentPos,
+        timeIndex
+      })
+    }
+    prevPos = currentPos;
 
 
     // if (!playbackData[timeIndex]) {

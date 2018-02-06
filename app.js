@@ -56,7 +56,9 @@ class App extends Component {
     return (
       <div>
         <div className="debug">
-          {points.length} points / {tracks.reduce((accumulator, current) => accumulator + current.path.length, 0)} track points
+          {points.length} points /
+          {/*{tracks.reduce((accumulator, current) => accumulator + current.path.length, 0)} track points*/}
+          {tracks.length} track points
         </div>
         <MapGL
           ref={(ref) => { this._ref = ref; } }
