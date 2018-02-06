@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 // import DeckGL, {LineLayer, ScatterplotLayer} from 'deck.gl';
-import DeckGL, {LineLayer} from 'deck.gl';
-import ScatterplotLayer from './scatterplot-layer';
+import DeckGL from 'deck.gl';
+import ScatterplotLayer from './layers/scatterplot-layer';
+import LineLayer from './layers/line-layer';
 
 export default class DeckGLOverlay extends Component {
 
@@ -47,7 +48,10 @@ export default class DeckGLOverlay extends Component {
           new LineLayer({
             id: 'line-layer',
             data: tracks,
-            strokeWidth: 2
+            strokeWidth: 2,
+            opacity: 1,
+            innerTimeStart: t,
+            innerTimeEnd: t + 300
           })
           // new PathLayer({
           //   id: 'path-layer',
