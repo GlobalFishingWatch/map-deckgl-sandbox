@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-// import DeckGL, {LineLayer, ScatterplotLayer} from 'deck.gl';
+// import DeckGL, {IconLayer} from 'deck.gl';
 import DeckGL from 'deck.gl';
 import ScatterplotLayer from './layers/scatterplot-layer';
 import LineLayer from './layers/line-layer';
+import IconLayer from './layers/icon-layer';
 
 export default class DeckGLOverlay extends Component {
 
@@ -31,11 +32,21 @@ export default class DeckGLOverlay extends Component {
     const {t} = this.state;
     //console.log(100000 / (viewport.zoom * viewport.zoom))
 
+    const ICON_MAPPING = {
+      marker: {x: 0, y: 0, width: 128, height: 128, mask: true}
+    };
+
     return (
       <DeckGL
         {...viewport}
         debug
         layers={[
+          new IconLayer({
+            id: 'icon-layer',
+            data: points,
+            iconAtlas: './icon-atlas.png',
+            iconMapping: ICON_MAPPING
+          })
           // new ScatterplotLayer({
           //   id: 'scatterplot-layer',
           //   data: points,
@@ -43,16 +54,18 @@ export default class DeckGLOverlay extends Component {
           //   outline: false,
           //   opacity: 1,
           //   innerTimeStart: t,
-          //   innerTimeEnd: t + 300
+          //   innerTimeEnd: t + 30
           // }),
-          new LineLayer({
-            id: 'line-layer',
-            data: tracks,
-            strokeWidth: 2,
-            opacity: 1,
-            innerTimeStart: t,
-            innerTimeEnd: t + 300
-          })
+
+          // new LineLayer({
+          //   id: 'line-layer',
+          //   data: tracks,
+          //   strokeWidth: 2,
+          //   opacity: 1,
+          //   innerTimeStart: t,
+          //   innerTimeEnd: t + 30
+          // })
+
           // new PathLayer({
           //   id: 'path-layer',
           //   data: tracks,

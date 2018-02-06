@@ -172,7 +172,10 @@ export const getTilePlaybackData = (data, colsByName, tileCoordinates, isPBF, pr
       //   point.latitude = geom[1];
       // }
     } else {
-      point = {};
+      point = {
+        icon: 'marker', size: 24, color: [255, 0, 0],
+        position: [data.longitude[index], data.latitude[index]]
+      };
       columnsArr.forEach((c) => { point[c] = data[c][index]; });
     }
 
