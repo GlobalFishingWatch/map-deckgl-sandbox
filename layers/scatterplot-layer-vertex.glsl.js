@@ -31,39 +31,28 @@ attribute vec3 instancePickingColors;
 
 uniform float opacity;
 uniform float radiusScale;
-uniform float radiusMinPixels;
-uniform float radiusMaxPixels;
 uniform float renderPickingBuffer;
-uniform float outline;
-uniform float strokeWidth;
 uniform float innerTimeStart;
 uniform float innerTimeEnd;
 
 varying vec4 vColor;
 varying vec2 unitPosition;
-varying float innerUnitRadius;
+varying float filteredOut;
 
 void main(void) {
     
   if (instanceTime < innerTimeStart || instanceTime > innerTimeEnd) {
-    gl_Position = vec4(0., 0., 0., 0.);
+    //gl_Position = vec4(0., 0., 0., 0.);
+    filteredOut = 0.;
     return;
   }
+  
+  filteredOut = 1.;
 
-  // Multiply out radius and clamp to limits
-  float outerRadiusPixels = clamp(
-    project_scale(radiusScale * instanceRadius),
-    radiusMinPixels, radiusMaxPixels
-  );
-  // outline is centered at the radius
-  // outer radius needs to offset by half stroke width
-  outerRadiusPixels += outline * strokeWidth / 2.0;
+  float outerRadiusPixels = project_scale(radiusScale * instanceRadius);
 
   // position on the containing square in [-1, 1] space
   unitPosition = positions.xy;
-  // 0 - solid circle, 1 - stroke with lineWidth=0
-  innerUnitRadius = outline * (1.0 - strokeWidth / outerRadiusPixels);
-
 
   // Find the center of the point and add the current vertex
   vec3 center = project_position(instancePositions);

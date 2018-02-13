@@ -27,13 +27,16 @@ precision highp float;
 
 varying vec4 vColor;
 varying vec2 unitPosition;
-varying float innerUnitRadius;
+varying float filteredOut;
 
 void main(void) {
+  if (filteredOut < .5) {
+    discard;
+  }
 
   float distToCenter = length(unitPosition);
 
-  if (distToCenter <= 1.0 && distToCenter >= innerUnitRadius) {
+  if (distToCenter <= 1.0) {
     // gl_FragColor = vec4(vColor.rgb, vColor.a * (1. - distToCenter));
     gl_FragColor = vColor;
   } else {

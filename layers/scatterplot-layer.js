@@ -19,11 +19,9 @@
 // THE SOFTWARE.
 
 import {Layer, COORDINATE_SYSTEM, experimental} from 'deck.gl';
-import {fp64ify, enable64bitSupport} from 'deck.gl/src/lib/utils/fp64';
 import {GL, Model, Geometry} from 'luma.gl';
 
 import vs from './scatterplot-layer-vertex.glsl';
-import vs64 from './scatterplot-layer-vertex-64.glsl';
 import fs from './scatterplot-layer-fragment.glsl';
 
 const get = experimental.get;
@@ -32,11 +30,8 @@ const DEFAULT_COLOR = [0, 0, 0, 255];
 
 const defaultProps = {
   radiusScale: 1,
-  radiusMinPixels: 0, //  min point radius in pixels
-  radiusMaxPixels: Number.MAX_SAFE_INTEGER, // max point radius in pixels
   strokeWidth: 1,
   outline: false,
-  fp64: false,
 
   getPosition: x => [x.longitude, x.latitude],
   getRadius: x => x.radius || 1,
@@ -46,19 +41,12 @@ const defaultProps = {
 export default class ScatterplotLayer extends Layer {
   getShaders(id) {
     const {shaderCache} = this.context;
-    return enable64bitSupport(this.props) ?
-      {vs: vs64, fs, modules: ['project64'], shaderCache} :
-      {vs, fs, shaderCache}; // 'project' module added by default.
+    return {vs, fs, shaderCache};
   }
 
   initializeState() {
     const {gl} = this.context;
     this.setState({model: this._getModel(gl)});
-
-    /* eslint-disable max-len */
-    /* deprecated props check */
-    this._checkRemovedProp('radius', 'radiusScale');
-    this._checkRemovedProp('drawOutline', 'outline');
 
     this.state.attributeManager.addInstanced({
       instancePositions: {size: 3, accessor: 'getPosition', update: this.calculateInstancePositions},
@@ -111,13 +99,11 @@ export default class ScatterplotLayer extends Layer {
   }
 
   draw({uniforms}) {
-    const {radiusScale, radiusMinPixels, radiusMaxPixels, outline, strokeWidth, innerTimeStart, innerTimeEnd} = this.props;
+    const {radiusScale, outline, strokeWidth, innerTimeStart, innerTimeEnd} = this.props;
     this.state.model.render(Object.assign({}, uniforms, {
       outline: outline ? 1 : 0,
       strokeWidth,
       radiusScale,
-      radiusMinPixels,
-      radiusMaxPixels,
       innerTimeStart,
       innerTimeEnd
     }));
@@ -156,8 +142,8 @@ export default class ScatterplotLayer extends Layer {
     let i = 0;
     for (const point of data) {
       const position = getPosition(point);
-      value[i++] = fp64ify(get(position, 0))[1];
-      value[i++] = fp64ify(get(position, 1))[1];
+      value[i++] = get(position, 0);
+      value[i++] = get(position, 1);
     }
   }
 

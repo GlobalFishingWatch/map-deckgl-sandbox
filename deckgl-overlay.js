@@ -88,10 +88,19 @@ export default class DeckGLOverlay extends Component {
   }
 
   _animate() {
-    this.intervalTimer = window.setInterval(this._tick, 20);
+    //this.intervalTimer = window.setInterval(this._tick, 20);
+    // this.ts = performance.now();
+    // this.startTs = this.ts;
+    this._tick();
   }
 
   _tick() {
+    // const ts = performance.now();
+    // const step = ts - this.startTs;
+    // const delta =  ts - this.ts;
+    // console.log(step);
+    // this.ts = ts;
+    requestAnimationFrame(this._tick);
     this.setState({t : this.state.t + 1});
   }
 
@@ -133,7 +142,7 @@ export default class DeckGLOverlay extends Component {
               outline: false,
               opacity: 1,
               innerTimeStart: t,
-              innerTimeEnd: t + 30,
+              innerTimeEnd: t + 180,
               pickable: true
             }),
 

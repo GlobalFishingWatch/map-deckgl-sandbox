@@ -52,6 +52,11 @@ vec2 getExtrusionOffset(vec2 line_clipspace, float offset_direction) {
 }
 
 void main(void) {
+  // if (instanceTime < innerTimeStart || instanceTime > innerTimeEnd) {
+  //   gl_Position = vec4(0., 0., 0., 0.);
+  //   //filteredOut = 0.;
+  //   return;
+  // }
   // Position
   vec3 sourcePos = project_position(instanceSourcePositions);
   vec3 targetPos = project_position(instanceTargetPositions);
@@ -66,15 +71,17 @@ void main(void) {
   vec2 offset = getExtrusionOffset(target.xy - source.xy, positions.y);
   gl_Position = p + vec4(offset, 0.0, 0.0);
   
+  
   float finalOpacity;
   if (instanceTime < innerTimeStart || instanceTime > innerTimeEnd) {
     finalOpacity = 0.5;
   } else {
     finalOpacity = opacity;
   }
+  
 
   // Color
-  vec4 color = vec4(instanceColors.rgb, instanceColors.a * finalOpacity) / 255.;
+  vec4 color = vec4(instanceColors.rgb, instanceColors.a) / 255.;
   vec4 pickingColor = vec4(instancePickingColors / 255., 1.);
   vColor = mix(
     color,
