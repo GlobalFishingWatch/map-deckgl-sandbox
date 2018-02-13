@@ -30,6 +30,10 @@ const DEFAULT_TEXTURE_MIN_FILTER = GL.LINEAR_MIPMAP_LINEAR;
 // GL.LINEAR is the default value but explicitly set it here
 const DEFAULT_TEXTURE_MAG_FILTER = GL.LINEAR;
 
+
+
+
+
 /*
  * @param {object} props
  * @param {Texture2D | string} props.iconAtlas - atlas image url or texture
@@ -55,7 +59,9 @@ const DEFAULT_TEXTURE_MAG_FILTER = GL.LINEAR;
  */
 const defaultProps = {
   iconAtlas: null,
-  iconMapping: {},
+  iconMapping: {
+    marker: {x: 8, y: 120, width: 16, height: 16, mask: true}
+  },
   sizeScale: 1,
   fp64: false,
 
@@ -127,8 +133,16 @@ export default class IconLayer extends Layer {
     }
 
     if (oldProps.iconAtlas !== iconAtlas) {
-
-      if (iconAtlas instanceof Texture2D) {
+      if (iconAtlas instanceof Image) {
+        console.log('got an image');
+        const texture = new Texture2D(this.context.gl, {id: 'heatmap', data: iconAtlas});
+        texture.setParameters({
+          [GL.TEXTURE_MIN_FILTER]: DEFAULT_TEXTURE_MIN_FILTER,
+          [GL.TEXTURE_MAG_FILTER]: DEFAULT_TEXTURE_MAG_FILTER
+        });
+        this.setState({iconsTexture: texture});
+      }
+      else if (iconAtlas instanceof Texture2D) {
         iconAtlas.setParameters({
           [GL.TEXTURE_MIN_FILTER]: DEFAULT_TEXTURE_MIN_FILTER,
           [GL.TEXTURE_MAG_FILTER]: DEFAULT_TEXTURE_MAG_FILTER

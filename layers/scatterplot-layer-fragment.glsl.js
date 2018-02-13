@@ -34,6 +34,7 @@ void main(void) {
   float distToCenter = length(unitPosition);
 
   if (distToCenter <= 1.0 && distToCenter >= innerUnitRadius) {
+    // gl_FragColor = vec4(vColor.rgb, vColor.a * (1. - distToCenter));
     gl_FragColor = vColor;
   } else {
     discard;

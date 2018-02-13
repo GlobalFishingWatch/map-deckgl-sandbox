@@ -173,7 +173,8 @@ export const getTilePlaybackData = (data, colsByName, tileCoordinates, isPBF, pr
       // }
     } else {
       point = {
-        icon: 'marker', size: 24, color: [255, 0, 0],
+        opacity: .5,
+        icon: 'marker', size: 16, color: [5, 26, 63, 180],
         position: [data.longitude[index], data.latitude[index]]
       };
       columnsArr.forEach((c) => { point[c] = data[c][index]; });

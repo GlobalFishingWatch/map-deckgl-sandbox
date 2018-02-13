@@ -142,7 +142,6 @@ export default class ScatterplotLayer extends Layer {
     const {data, getPosition} = this.props;
     const {value} = attribute;
     let i = 0;
-    console.log(data.length)
     for (const point of data) {
       const position = getPosition(point);
       value[i++] = get(position, 0);

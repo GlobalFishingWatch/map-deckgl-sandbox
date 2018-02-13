@@ -26,7 +26,7 @@ import vs from './line-layer-vertex.glsl';
 import vs64 from './line-layer-vertex-64.glsl';
 import fs from './line-layer-fragment.glsl';
 
-const DEFAULT_COLOR = [0, 0, 0, 255];
+const DEFAULT_COLOR = [255, 0, 0, 255];
 
 const defaultProps = {
   strokeWidth: 1,

@@ -19,7 +19,6 @@ export default function (state = initialState, action) {
     newTiles.forEach(tile => {
       points = points.concat(tile.data);
     });
-    console.log(performance.now() - t)
     return Object.assign({}, state, { tiles: newTiles, points });
   }
   case 'update_tracks': {
