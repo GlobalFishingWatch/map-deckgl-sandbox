@@ -57,7 +57,7 @@ class App extends Component {
     return (
       <div>
         <div className="debug">
-          {points.length} points /
+          {points.length} points loaded /
           {/*{tracks.reduce((accumulator, current) => accumulator + current.path.length, 0)} track points*/}
           {tracks.length} track points /
           {numDays} days displayed

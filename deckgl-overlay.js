@@ -141,7 +141,7 @@ export default class DeckGLOverlay extends Component {
             new ScatterplotLayer({
               id: 'scatterplot-layer',
               data: points,
-              radiusScale: 20000,
+              radiusScale: 30000,
               outline: false,
               opacity: 1,
               innerTimeStart: t,
