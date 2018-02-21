@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "webpack-dev-server --progress --hot --port 3001"
+    "start": "webpack-dev-server --config webpack.dev.js --progress --hot --port 3001",
+    "build": "webpack -p --config webpack.prod.js --output-filename ./bundle.js"
   },
   "dependencies": {
     "@mapbox/tile-cover": "^3.0.2",
@@ -30,7 +31,9 @@
     "dotenv-webpack": "^1.5.4",
     "eslint": "^4.16.0",
     "eslint-plugin-react": "^7.6.1",
+    "uglifyjs-webpack-plugin": "^1.1.8",
     "webpack": "^2.2.0",
-    "webpack-dev-server": "^2.2.0"
+    "webpack-dev-server": "^2.2.0",
+    "webpack-merge": "^4.1.1"
   }
 }
