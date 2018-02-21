@@ -51,6 +51,7 @@ class App extends Component {
 
     const {viewport} = this.state;
     const {points, tracks} = this.props;
+    const numDays = 180
     // console.log(tracks)
 
     return (
@@ -58,7 +59,8 @@ class App extends Component {
         <div className="debug">
           {points.length} points /
           {/*{tracks.reduce((accumulator, current) => accumulator + current.path.length, 0)} track points*/}
-          {tracks.length} track points
+          {tracks.length} track points /
+          {numDays} days displayed
         </div>
         <MapGL
           ref={(ref) => { this._ref = ref; } }
@@ -66,7 +68,7 @@ class App extends Component {
           {...viewport}
           onViewportChange={this._onViewportChange.bind(this)}
           mapboxApiAccessToken={MAPBOX_TOKEN}>
-          <DeckGLOverlay viewport={viewport} points={points} tracks={tracks} />
+          <DeckGLOverlay viewport={viewport} points={points} tracks={tracks} numDays={numDays} />
         </MapGL>
       </div>
     );

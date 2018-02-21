@@ -194,8 +194,7 @@ export const getTilePlaybackData = (data, colsByName, tileCoordinates, isPBF, pr
     //   point.worldY = worldY;
     // }
     if (columns.sigma) {
-      // point.radius = convert.sigmaToRadius(point.sigma, zoomFactorRadiusRenderingMode, zoomFactorRadius);
-      point.radius = 20;
+      point.radius = convert.sigmaToRadius(point.sigma, zoomFactorRadiusRenderingMode, zoomFactorRadius);
     }
     if (columns.weight) {
       point.opacity = convert.weightToOpacity(point.weight, zoomFactorOpacity);

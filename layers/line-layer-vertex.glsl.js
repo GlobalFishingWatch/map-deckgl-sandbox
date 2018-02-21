@@ -74,14 +74,14 @@ void main(void) {
   
   float finalOpacity;
   if (instanceTime < innerTimeStart || instanceTime > innerTimeEnd) {
-    finalOpacity = 0.5;
+    finalOpacity = 64.;
   } else {
-    finalOpacity = opacity;
+    finalOpacity = 255.;
   }
   
 
   // Color
-  vec4 color = vec4(instanceColors.rgb, instanceColors.a) / 255.;
+  vec4 color = vec4(instanceColors.rgb, finalOpacity) / 255.;
   vec4 pickingColor = vec4(instancePickingColors / 255., 1.);
   vColor = mix(
     color,

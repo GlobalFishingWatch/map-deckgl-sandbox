@@ -100,7 +100,9 @@ export default class DeckGLOverlay extends Component {
     // const delta =  ts - this.ts;
     // console.log(step);
     // this.ts = ts;
-    requestAnimationFrame(this._tick);
+    if (this.state.t <= 365) {
+      requestAnimationFrame(this._tick);
+    }
     this.setState({t : this.state.t + 1});
   }
 
@@ -111,7 +113,7 @@ export default class DeckGLOverlay extends Component {
   }
 
   render() {
-    const {viewport, points, tracks} = this.props;
+    const {viewport, points, tracks, numDays} = this.props;
     const {t} = this.state;
     //console.log(100000 / (viewport.zoom * viewport.zoom))
 
@@ -121,6 +123,7 @@ export default class DeckGLOverlay extends Component {
 
     return (
       <div onClick={this.onClickHandler}>
+        <div className="debug -right">frame: {t}</div>
         <DeckGL
           ref={deck => { this.deckGL = deck; }}
           {...viewport}
@@ -138,11 +141,11 @@ export default class DeckGLOverlay extends Component {
             new ScatterplotLayer({
               id: 'scatterplot-layer',
               data: points,
-              radiusScale: 700,
+              radiusScale: 20000,
               outline: false,
               opacity: 1,
               innerTimeStart: t,
-              innerTimeEnd: t + 180,
+              innerTimeEnd: t + numDays,
               pickable: true
             }),
 
@@ -152,7 +155,7 @@ export default class DeckGLOverlay extends Component {
               strokeWidth: 2,
               opacity: 1,
               innerTimeStart: t,
-              innerTimeEnd: t + 30
+              innerTimeEnd: t + numDays
             })
 
             // new PathLayer({

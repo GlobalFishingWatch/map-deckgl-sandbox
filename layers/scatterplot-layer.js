@@ -26,16 +26,12 @@ import fs from './scatterplot-layer-fragment.glsl';
 
 const get = experimental.get;
 
-const DEFAULT_COLOR = [0, 0, 0, 255];
+const DEFAULT_COLOR = [.5, 0, 1];
 
 const defaultProps = {
   radiusScale: 1,
-  strokeWidth: 1,
-  outline: false,
-
-  getPosition: x => [x.longitude, x.latitude],
-  getRadius: x => x.radius || 1,
-  getColor: x => x.color || DEFAULT_COLOR
+  layerOpacity: 1,
+  layerColor: DEFAULT_COLOR
 };
 
 export default class ScatterplotLayer extends Layer {
@@ -49,9 +45,9 @@ export default class ScatterplotLayer extends Layer {
     this.setState({model: this._getModel(gl)});
 
     this.state.attributeManager.addInstanced({
-      instancePositions: {size: 3, accessor: 'getPosition', update: this.calculateInstancePositions},
-      instanceRadius: {size: 1, accessor: 'getRadius', defaultValue: 1, update: this.calculateInstanceRadius},
-      instanceColors: {size: 4, type: GL.UNSIGNED_BYTE, accessor: 'getColor', update: this.calculateInstanceColors},
+      instancePositions: {size: 2, update: this.calculateInstancePositions},
+      instanceRadius: {size: 1, defaultValue: 1, update: this.calculateInstanceRadius},
+      instanceOpacity: {size: 1, update: this.calculateInstanceOpacity},
       instanceTime: {size: 1, update: this.calculateInstanceTime}
     });
     /* eslint-enable max-len */
@@ -99,13 +95,13 @@ export default class ScatterplotLayer extends Layer {
   }
 
   draw({uniforms}) {
-    const {radiusScale, outline, strokeWidth, innerTimeStart, innerTimeEnd} = this.props;
+    const {radiusScale, innerTimeStart, innerTimeEnd, layerOpacity, layerColor} = this.props;
     this.state.model.render(Object.assign({}, uniforms, {
-      outline: outline ? 1 : 0,
-      strokeWidth,
       radiusScale,
       innerTimeStart,
-      innerTimeEnd
+      innerTimeEnd,
+      layerOpacity,
+      layerColor
     }));
   }
 
@@ -125,35 +121,33 @@ export default class ScatterplotLayer extends Layer {
   }
 
   calculateInstancePositions(attribute) {
-    const {data, getPosition} = this.props;
+    const {data} = this.props;
     const {value} = attribute;
     let i = 0;
     for (const point of data) {
-      const position = getPosition(point);
-      value[i++] = get(position, 0);
-      value[i++] = get(position, 1);
-      value[i++] = get(position, 2) || 0;
-    }
-  }
-
-  calculateInstancePositions64xyLow(attribute) {
-    const {data, getPosition} = this.props;
-    const {value} = attribute;
-    let i = 0;
-    for (const point of data) {
-      const position = getPosition(point);
+      const position = [point.longitude, point.latitude];
       value[i++] = get(position, 0);
       value[i++] = get(position, 1);
     }
   }
 
   calculateInstanceRadius(attribute) {
-    const {data, getRadius} = this.props;
+    const {data} = this.props;
     const {value} = attribute;
     let i = 0;
     for (const point of data) {
-      const radius = getRadius(point);
+      const radius = point.radius;
       value[i++] = isNaN(radius) ? 1 : radius;
+    }
+  }
+
+  calculateInstanceOpacity(attribute) {
+    const {data} = this.props;
+    const {value} = attribute;
+    let i = 0;
+    for (const point of data) {
+      const opacity = point.opacity;
+      value[i++] = opacity;
     }
   }
 
@@ -164,19 +158,6 @@ export default class ScatterplotLayer extends Layer {
     for (const point of data) {
       const time = point.timeIndex;
       value[i++] = time;
-    }
-  }
-
-  calculateInstanceColors(attribute) {
-    const {data, getColor} = this.props;
-    const {value} = attribute;
-    let i = 0;
-    for (const point of data) {
-      const color = getColor(point) || DEFAULT_COLOR;
-      value[i++] = get(color, 0);
-      value[i++] = get(color, 1);
-      value[i++] = get(color, 2);
-      value[i++] = isNaN(get(color, 3)) ? 255 : get(color, 3);
     }
   }
 }

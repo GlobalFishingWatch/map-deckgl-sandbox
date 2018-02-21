@@ -26,11 +26,13 @@ attribute vec3 positions;
 attribute vec3 instancePositions;
 attribute float instanceRadius;
 attribute float instanceTime;
-attribute vec4 instanceColors;
+attribute float instanceOpacity;
 attribute vec3 instancePickingColors;
 
 uniform float opacity;
 uniform float radiusScale;
+uniform float layerOpacity;
+uniform vec3 layerColor;
 uniform float renderPickingBuffer;
 uniform float innerTimeStart;
 uniform float innerTimeEnd;
@@ -60,7 +62,7 @@ void main(void) {
   gl_Position = project_to_clipspace(vec4(center + vertex, 1.0));
 
   // Apply opacity to instance color, or return instance picking color
-  vec4 color = vec4(instanceColors.rgb, instanceColors.a * opacity) / 255.;
+  vec4 color = vec4(layerColor.rgb, instanceOpacity);
   vec4 pickingColor = vec4(instancePickingColors / 255., 1.);
   vColor = mix(color, pickingColor, renderPickingBuffer);
 }
