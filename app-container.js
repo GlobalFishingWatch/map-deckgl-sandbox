@@ -1,15 +1,17 @@
 import { connect } from 'react-redux';
 import App from './app';
-import { updateTiles, loadTracks } from './actions';
+import { updateTiles, loadTracks, updateViewport } from './actions';
 
 const mapStateToProps = state => ({
   points: state.app.points,
-  tracks: state.app.tracks
+  tracks: state.app.tracks,
+  viewport: state.app.viewport
 });
 
 const mapDispatchToProps = dispatch => ({
-  viewportChange: (bounds, zoom) => {
-    dispatch(updateTiles(bounds, zoom));
+  viewportChange: (bounds, viewport) => {
+    dispatch(updateViewport(viewport));
+    dispatch(updateTiles(bounds, viewport.zoom));
   },
   loadTracks: () => {
     dispatch(loadTracks());

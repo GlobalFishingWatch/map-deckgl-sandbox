@@ -176,8 +176,6 @@ export function updateTiles(bounds, zoom) {
   };
 }
 
-
-
 export function loadTracks() {
   return (dispatch) => {
     dispatch(_loadTracks(6531094));
@@ -185,4 +183,13 @@ export function loadTracks() {
   };
   // https://api-dot-skytruth-pelagos-production.appspot.com/v2/tilesets/516-resample-v2/sub/seriesgroup=6531094/2012-01-01T00:00:00.000Z,2013-01-01T00:00:00.000Z;0,0,0
   // https://api-dot-skytruth-pelagos-production.appspot.com/v2/tilesets/516-resample-v2/sub/seriesgroup=958751/2012-01-01T00:00:00.000Z,2013-01-01T00:00:00.000Z;0,0,0
+}
+
+export function updateViewport(viewport) {
+  return (dispatch) => {
+    dispatch({
+      type: 'update_viewport',
+      payload: viewport
+    });
+  };
 }

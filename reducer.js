@@ -2,7 +2,16 @@ const initialState = {
   tilesIndexes: [],
   tiles: [],
   points: [],
-  tracks: []
+  tracks: [],
+  viewport: {
+    width: 1000,
+    height: 800,
+    latitude: 0,
+    longitude: 0,
+    zoom: 4.01,
+    bearing: 0,
+    pitch: 0
+  }
 };
 
 export default function (state = initialState, action) {
@@ -26,6 +35,9 @@ export default function (state = initialState, action) {
   }
   case 'update_tracks': {
     return Object.assign({}, state, { tracks: state.tracks.concat(action.payload) });
+  }
+  case 'update_viewport': {
+    return {...state, viewport: action.payload };
   }
   default:
     return state;

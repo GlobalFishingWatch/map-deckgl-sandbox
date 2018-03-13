@@ -7,18 +7,6 @@ import MAPBOX_TOKEN from './mapbox-token';
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      viewport: {
-        width: 1000,
-        height: 800,
-        latitude: 0,
-        longitude: 0,
-        zoom: 4.01,
-        bearing: 0,
-        pitch: 0
-      }
-    };
-
   }
 
   componentDidMount() {
@@ -35,23 +23,20 @@ class App extends Component {
   }
 
   _onViewportChange(viewport) {
-    this._map = this._ref.getMap();
-    if (this._map) {
-      const zoom = this._map.getZoom()
-      const bounds = this._map.getBounds()
-      this.props.viewportChange(bounds, zoom);
-
+    if (viewport.latitude === undefined) {
+      return;
     }
-    this.setState({
-      viewport: {...this.state.viewport, ...viewport}
-    });
+    this._map = this._ref.getMap();
+    let bounds;
+    if (this._map) {
+      bounds = this._map.getBounds();
+    }
+    this.props.viewportChange(bounds, viewport);
   }
 
   render() {
-
-    const {viewport} = this.state;
-    const {points, tracks} = this.props;
-    const numDays = 180
+    const {points, tracks, viewport} = this.props;
+    const numDays = 180;
     // console.log(tracks)
 
     return (
