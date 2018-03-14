@@ -78,33 +78,9 @@ export default class DeckGLOverlay extends Component {
     this.state = {
       t: 0
     };
-    this._tick = this._tick.bind(this);
     this.onClickHandler = this.onClickHandler.bind(this);
   }
 
-
-  componentDidMount() {
-    this._animate();
-  }
-
-  _animate() {
-    //this.intervalTimer = window.setInterval(this._tick, 20);
-    // this.ts = performance.now();
-    // this.startTs = this.ts;
-    this._tick();
-  }
-
-  _tick() {
-    // const ts = performance.now();
-    // const step = ts - this.startTs;
-    // const delta =  ts - this.ts;
-    // console.log(step);
-    // this.ts = ts;
-    if (this.state.t <= 365) {
-      requestAnimationFrame(this._tick);
-    }
-    this.setState({t : this.state.t + 1});
-  }
 
   onClickHandler(event) {
     const pickInfo = this.deckGL.queryVisibleObjects({x: event.clientX, y: event.clientY, width: 10, height: 10 });
@@ -113,8 +89,7 @@ export default class DeckGLOverlay extends Component {
   }
 
   render() {
-    const {viewport, points, tracks, numDays} = this.props;
-    const {t} = this.state;
+    const {viewport, points, tracks, day, numDays} = this.props;
     //console.log(100000 / (viewport.zoom * viewport.zoom))
 
     // const iconMapping = {
@@ -123,7 +98,7 @@ export default class DeckGLOverlay extends Component {
 
     return (
       <div onClick={this.onClickHandler}>
-        <div className="debug -right">frame: {t}</div>
+        <div className="debug -right">frame: {day}</div>
         <DeckGL
           ref={deck => { this.deckGL = deck; }}
           {...viewport}
@@ -144,8 +119,8 @@ export default class DeckGLOverlay extends Component {
               radiusScale: 30000,
               outline: false,
               opacity: 1,
-              innerTimeStart: t,
-              innerTimeEnd: t + numDays,
+              innerTimeStart: day,
+              innerTimeEnd: day + numDays,
               pickable: true
             }),
 
@@ -154,8 +129,8 @@ export default class DeckGLOverlay extends Component {
               data: tracks,
               strokeWidth: 2,
               opacity: 1,
-              innerTimeStart: t,
-              innerTimeEnd: t + numDays
+              innerTimeStart: day,
+              innerTimeEnd: day + numDays
             })
 
             // new PathLayer({
@@ -165,7 +140,8 @@ export default class DeckGLOverlay extends Component {
             //   widthScale: 5000
             //   // widthScale: 100000 / (viewport.zoom * viewport.zoom)
             // })
-          ]} />
+          ]}
+        />
       </div>
     );
   }

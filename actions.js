@@ -1,4 +1,5 @@
 import tilecover from '@mapbox/tile-cover/index';
+import _ from 'lodash';
 import {
   getTilePromises,
   getCleanVectorArrays,
@@ -142,8 +143,9 @@ function _loadTracks(seriesgroup) {
   };
 }
 
-export function updateTiles(bounds, zoom) {
+export function updateTiles(bounds) {
   return (dispatch, getState) => {
+    const zoom = getState().app.viewport.zoom;
     const [w, s, e, n] = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
     const geom = {
       'type': 'Polygon',
@@ -185,11 +187,39 @@ export function loadTracks() {
   // https://api-dot-skytruth-pelagos-production.appspot.com/v2/tilesets/516-resample-v2/sub/seriesgroup=958751/2012-01-01T00:00:00.000Z,2013-01-01T00:00:00.000Z;0,0,0
 }
 
+
+const allowPlay = _.debounce(dispatch => { dispatch({type: 'allow_play'}); }, 100);
+const allowPlayDebounced = () => allowPlay;
+
 export function updateViewport(viewport) {
   return (dispatch) => {
+    dispatch({
+      type: 'disallow_play'
+    });
+    dispatch(allowPlayDebounced());
     dispatch({
       type: 'update_viewport',
       payload: viewport
     });
+  };
+}
+
+export function tick() {
+  return (dispatch, getState) => {
+    requestAnimationFrame(() => { dispatch(tick()); });
+    console.log(getState().app.allowPlay)
+    if (getState().app.allowPlay === true) {
+      dispatch({
+        type: 'tick'
+      });
+    }
+  };
+}
+
+export function startTimer() {
+  return (dispatch) => {
+    setTimeout(() => {
+      dispatch(tick());
+    }, 3000);
   };
 }

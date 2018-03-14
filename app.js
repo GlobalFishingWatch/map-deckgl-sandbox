@@ -1,7 +1,7 @@
 /* global document */
 import React, {Component} from 'react';
 import MapGL from 'react-map-gl';
-import DeckGLOverlay from './deckgl-overlay';
+import DeckGLOverlay from './deckgl-overlay-container';
 import MAPBOX_TOKEN from './mapbox-token';
 
 class App extends Component {
@@ -13,6 +13,9 @@ class App extends Component {
     window.addEventListener('resize', this._resize.bind(this));
     this.props.loadTracks();
     this._resize();
+
+    this._map = this._ref.getMap();
+    this.props.loadTiles(this._map.getBounds());
   }
 
   _resize() {
@@ -26,18 +29,12 @@ class App extends Component {
     if (viewport.latitude === undefined) {
       return;
     }
-    this._map = this._ref.getMap();
-    let bounds;
-    if (this._map) {
-      bounds = this._map.getBounds();
-    }
-    this.props.viewportChange(bounds, viewport);
+    this.props.viewportChange(viewport);
+    // this.props.loadTiles(this._map.getBounds());
   }
 
   render() {
-    const {points, tracks, viewport} = this.props;
-    const numDays = 180;
-    // console.log(tracks)
+    const {points, tracks, viewport, numDays} = this.props;
 
     return (
       <div>
@@ -53,7 +50,7 @@ class App extends Component {
           {...viewport}
           onViewportChange={this._onViewportChange.bind(this)}
           mapboxApiAccessToken={MAPBOX_TOKEN}>
-          <DeckGLOverlay viewport={viewport} points={points} tracks={tracks} numDays={numDays} />
+          <DeckGLOverlay  />
         </MapGL>
       </div>
     );

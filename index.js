@@ -5,11 +5,11 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import reducer from './reducer';
 import AppContainer from './app-container.js';
-
+import { startTimer } from './actions';
 
 const reducers = combineReducers({
   app: reducer
-})
+});
 
 const store = createStore(
   reducers,
@@ -23,3 +23,4 @@ render(
   document.body.appendChild(document.createElement('div'))
 );
 
+store.dispatch(startTimer());

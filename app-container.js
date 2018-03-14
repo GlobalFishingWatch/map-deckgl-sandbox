@@ -5,13 +5,16 @@ import { updateTiles, loadTracks, updateViewport } from './actions';
 const mapStateToProps = state => ({
   points: state.app.points,
   tracks: state.app.tracks,
-  viewport: state.app.viewport
+  viewport: state.app.viewport,
+  numDays: state.app.numDays
 });
 
 const mapDispatchToProps = dispatch => ({
-  viewportChange: (bounds, viewport) => {
+  viewportChange: (viewport) => {
     dispatch(updateViewport(viewport));
-    dispatch(updateTiles(bounds, viewport.zoom));
+  },
+  loadTiles: (bounds) => {
+    dispatch(updateTiles(bounds));
   },
   loadTracks: () => {
     dispatch(loadTracks());

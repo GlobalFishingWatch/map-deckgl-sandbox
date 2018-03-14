@@ -11,7 +11,10 @@ const initialState = {
     zoom: 4.01,
     bearing: 0,
     pitch: 0
-  }
+  },
+  day: 0,
+  numDays: 180,
+  allowPlay: true
 };
 
 export default function (state = initialState, action) {
@@ -38,6 +41,15 @@ export default function (state = initialState, action) {
   }
   case 'update_viewport': {
     return {...state, viewport: action.payload };
+  }
+  case 'tick': {
+    return {...state, day: state.day+1};
+  }
+  case 'disallow_play': {
+    return {...state, allowPlay: false};
+  }
+  case 'allow_play': {
+    return {...state, allowPlay: true};
   }
   default:
     return state;
